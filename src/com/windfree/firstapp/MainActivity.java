@@ -1,16 +1,18 @@
 package com.windfree.firstapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 	public final static String EXTRA_MESSAGE = "com.windfree.myfirstapp.MESSAGE";
@@ -84,6 +86,23 @@ public class MainActivity extends ActionBarActivity {
 		String message = editText.getText().toString();
 		intent.putExtra(EXTRA_MESSAGE, message);
 		startActivity(intent);
+	}
+	
+	public void saveTest(View view) {
+//		Context context = getActivity();
+//		SharedPreferences sharedPref = context.getSharedPreferences(
+//		        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+		SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		int newHighScore = 100;
+		editor.putInt(getString(R.string.saved_high_score), newHighScore);
+		editor.commit();
+		
+		int defaultValue = getResources().getInteger(R.integer.saved_high_score_default);
+		long highScore = sharedPref.getInt(getString(R.string.saved_high_score), defaultValue);
+		
+		TextView infoText = (TextView)findViewById(R.id.info_text);
+		infoText.setText(Long.toString(highScore));
 	}
 
 }
