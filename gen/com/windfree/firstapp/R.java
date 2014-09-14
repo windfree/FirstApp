@@ -997,8 +997,8 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_search=0x7f050040;
-        public static final int action_settings=0x7f05003f;
+        public static final int action_search=0x7f050041;
+        public static final int action_settings=0x7f050040;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1026,6 +1026,7 @@ containing a value of this type.
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;
         public static final int normal=0x7f050000;
+        public static final int photo_icon=0x7f05003f;
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
@@ -1161,6 +1162,7 @@ containing a value of this type.
         public static final int edit_message=0x7f0a000e;
         public static final int hello_world=0x7f0a0014;
         public static final int saved_high_score=0x7f0a0016;
+        public static final int take_photo_btn_label=0x7f0a0017;
         public static final int title_activity_display_message=0x7f0a0013;
         public static final int title_activity_main=0x7f0a0012;
     }
