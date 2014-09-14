@@ -168,14 +168,37 @@ public class MainActivity extends ActionBarActivity {
 			Log.e(LOG_TAG, "ExternalStorage is not Writable!");
 			return;
 		}
-		File externalDir = getAlbumStorageDir("TestPublicAlbum");
-		try{
-			outputStream = new FileOutputStream("TestPublicAlbum/test-pub-external.txt");
-			outputStream.write(string.getBytes());
-			outputStream.close();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+		//File externalDir = getAlbumStorageDir("TestPublicAlbum");
+		try {  
+	        String pathName="/sdcard/test/";  
+	        String fileName="file.txt";  
+	        File path = new File(pathName);  
+	        File file = new File(pathName + fileName);  
+	        if( !path.exists()) {  
+	            Log.d("TestFile", "Create the path:" + pathName);  
+	            path.mkdir();  
+	        }  
+	        if( !file.exists()) {  
+	            Log.d("TestFile", "Create the file:" + fileName);  
+	            file.createNewFile();  
+	        }  
+	        FileOutputStream stream = new FileOutputStream(file);  
+	        String s = "this is a test string writing to file.";  
+	        byte[] buf = s.getBytes();  
+	        stream.write(buf);            
+	        stream.close();  
+	          
+	    } catch(Exception e) {  
+	        Log.e("TestFile", "Error on writeFilToSD.");  
+	        e.printStackTrace();  
+	    }
+//		try{
+//			outputStream = new FileOutputStream("/sdcard/test-pub-external.txt");
+//			outputStream.write(string.getBytes());
+//			outputStream.close();
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
 	}
 
 }
