@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:layout_width="0dp"
-            android:onClick="sendMessage"
+            android:id="@+id/send_message_btn"
             android:text="@string/button_send" />
 
     </LinearLayout>
@@ -32,7 +32,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="saveTest"
+            android:id="@+id/save_test_btn"
             android:text="@string/button_save" />
 
         <TextView
@@ -51,13 +51,32 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="takePhoto"
+            android:id="@+id/take_photo_btn"
             android:text="@string/take_photo_btn_label" />
 
         <ImageView
             android:id="@+id/photo_icon"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:src="@drawable/abc_ic_clear_holo_light" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/take_video_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/take_video_btn_label" />
+
+        <VideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
     
 </LinearLayout>

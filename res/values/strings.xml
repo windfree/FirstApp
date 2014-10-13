@@ -14,5 +14,6 @@
     <integer name="saved_high_score_default">0</integer>
     
     <string name="take_photo_btn_label">TakePhoto</string>
+    <string name="take_video_btn_label">TakeVideo</string>
 
 </resources>
