@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity implements MainFragment.onBu
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		Log.i(LOG_TAG, "onResume()");
-		super.onResume();
+		super.onResume();		
 	}
 
 	@Override
