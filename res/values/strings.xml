@@ -10,10 +10,18 @@
     <string name="title_activity_display_message">My Message</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_search">Search</string>
-    <string name="saved_high_score">SaveHighScore</string>    
+    <string name="saved_high_score">SaveHighScore</string>
+
     <integer name="saved_high_score_default">0</integer>
-    
+
     <string name="take_photo_btn_label">TakePhoto</string>
     <string name="take_video_btn_label">TakeVideo</string>
+    
+    <string name="title_activity_ttsclock">TTSClockActivity</string>
+    <string name="text_to_voice_btn_label">TextToVoice</string>
+    <string name="timer_clock_btn_label_start">Start</string>
+    <string name="timer_clock_btn_label_stop">Stop</string>
+    <string name="pause_clock_btn_label_pause">Pause</string>
+    <string name="pause_clock_btn_label_restart">Restart</string>
 
 </resources>

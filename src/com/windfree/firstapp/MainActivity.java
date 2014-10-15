@@ -17,12 +17,11 @@ import android.widget.EditText;
 
 public class MainActivity extends ActionBarActivity implements MainFragment.onButtonClickListener {
 	public final static String EXTRA_MESSAGE = "com.windfree.myfirstapp.MESSAGE";
-	private final static String LOG_TAG = "FirstApp";
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		Log.i(LOG_TAG, "onResume()");
+		Log.i(Consts.LOG_TAG, "onResume()");
 		super.onResume();		
 	}
 
@@ -43,13 +42,13 @@ public class MainActivity extends ActionBarActivity implements MainFragment.onBu
 
 	@Override
 	protected void onDestroy() {
-		Log.e(LOG_TAG, "onDestroy()");
+		Log.e(Consts.LOG_TAG, "onDestroy()");
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
-		Log.i(LOG_TAG, "onPause()");
+		Log.i(Consts.LOG_TAG, "onPause()");
 		super.onPause();
 	}
 	
@@ -84,8 +83,20 @@ public class MainActivity extends ActionBarActivity implements MainFragment.onBu
 		// return super.onOptionsItemSelected(item);
 	}
 
+	public void onFunctionBtnClick(int action) {
+		switch(action) {
+		case Consts.TTS_ACTION:
+			Intent intent = new Intent(this, TTSClockActivity.class);
+//			EditText editText = (EditText) findViewById(R.id.edit_message);
+//			String message = editText.getText().toString();
+//			intent.putExtra(EXTRA_MESSAGE, message);
+			startActivity(intent);
+			break;
+		}
+	}
+	
 	public void onButtonClick(){
-		Log.i(this.LOG_TAG, "activity onButtonClick");
+		Log.i(Consts.LOG_TAG, "activity onButtonClick");
 		MainFragment mainFg = (MainFragment)getSupportFragmentManager().findFragmentById(R.id.main_fg);
 		if(mainFg != null){
 			mainFg.onButtonClick();
@@ -141,7 +152,7 @@ public class MainActivity extends ActionBarActivity implements MainFragment.onBu
 		}
 
 		if (!FileUtil.isExternalStorageWritable()) {
-			Log.e(LOG_TAG, "ExternalStorage is not Writable!");
+			Log.e(Consts.LOG_TAG, "ExternalStorage is not Writable!");
 			return;
 		}
 		// File externalDir = getAlbumStorageDir("TestPublicAlbum");
@@ -165,7 +176,7 @@ public class MainActivity extends ActionBarActivity implements MainFragment.onBu
 			stream.close();
 
 		} catch (Exception e) {
-			Log.e(LOG_TAG, "Error on writeFilToSD.");
+			Log.e(Consts.LOG_TAG, "Error on writeFilToSD.");
 			e.printStackTrace();
 		}
 		// try{
@@ -182,14 +193,14 @@ public class MainActivity extends ActionBarActivity implements MainFragment.onBu
 		// TODO Auto-generated method stub
 		try {
 			super.onConfigurationChanged(newConfig);
-			Log.i(LOG_TAG, "onConfigurationChanged");
+			Log.i(Consts.LOG_TAG, "onConfigurationChanged");
 			if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				Log.i(LOG_TAG, "∫·∆¡");
+				Log.i(Consts.LOG_TAG, "∫·∆¡");
 				Configuration o = newConfig;
 				o.orientation = Configuration.ORIENTATION_PORTRAIT;
 				newConfig.setTo(o);
 			} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-				Log.i(LOG_TAG, " ˙∆¡");
+				Log.i(Consts.LOG_TAG, " ˙∆¡");
 			}
 		} catch (Exception e) {
 

@@ -34,9 +34,6 @@ import android.widget.VideoView;
 
 public class MainFragment extends ListFragment {
 	public final static String EXTRA_MESSAGE = "com.windfree.myfirstapp.MESSAGE";
-	private final static String LOG_TAG = "FirstApp";
-	private final static String TTS_FUNCTION = "TTS";
-	private final static int TTS_ACTION = 0;
 
 	private TextView m_info_text;
 	
@@ -55,6 +52,7 @@ public class MainFragment extends ListFragment {
 	private onButtonClickListener m_button_click_callback;	
 	public interface onButtonClickListener{
 		public void onButtonClick();
+		public void onFunctionBtnClick(int action);
 		public void sendMessage(View view);
 		public void saveTest(View view);
 	}
@@ -169,7 +167,7 @@ public class MainFragment extends ListFragment {
 			holder.btn.setOnClickListener(new View.OnClickListener() {				
 				@Override
 				public void onClick(View v) {
-					do_function((int)m_function_list_data.get(position).get("action"));
+					m_button_click_callback.onFunctionBtnClick((int)m_function_list_data.get(position).get("action"));
 				}
 			});
 			
@@ -180,19 +178,11 @@ public class MainFragment extends ListFragment {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", this.TTS_FUNCTION);
-		map.put("action", this.TTS_ACTION);
+		map.put("title", Consts.TTS_FUNCTION);
+		map.put("action", Consts.TTS_ACTION);
 		list.add(map);
 		
 		return list;
-	}
-
-	private void do_function(int action) {
-		switch (action) {
-		case TTS_ACTION:
-			Log.i(this.LOG_TAG, String.format("do %s test", this.TTS_FUNCTION));
-			break;
-		}
 	}
 
 	public void setInfoText(String info) {
@@ -218,7 +208,7 @@ public class MainFragment extends ListFragment {
 	
 	private void handleCameraVideo(Intent intent) {
 		this.m_video_uri = intent.getData();
-		Log.i(this.LOG_TAG, "get video data in " + this.m_video_uri.toString());
+		Log.i(Consts.LOG_TAG, "get video data in " + this.m_video_uri.toString());
 		this.m_video_view.setVideoURI(this.m_video_uri);
 		this.m_video_view.setVisibility(View.VISIBLE);
 		this.m_video_view.start();
@@ -227,14 +217,14 @@ public class MainFragment extends ListFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// super.onActivityResult(requestCode, resultCode, data);
-		Log.i(LOG_TAG, "onActivityResult start1");
+		Log.i(Consts.LOG_TAG, "onActivityResult start1");
 		try {
 			if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == -1) {
-				Log.i(LOG_TAG, "onActivityResult start2");
+				Log.i(Consts.LOG_TAG, "onActivityResult start2");
 				handleSmallCameraPhoto(data);
 			}
 			if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == -1) {
-				Log.i(this.LOG_TAG, "Let's handle video Now");
+				Log.i(Consts.LOG_TAG, "Let's handle video Now");
 				handleCameraVideo(data);
 		    }
 		} catch (Exception e) {
@@ -294,7 +284,7 @@ public class MainFragment extends ListFragment {
 	}
 	
 	public void onButtonClick() {
-		Log.i(this.LOG_TAG, "fragment onButtonClick");
+		Log.i(Consts.LOG_TAG, "fragment onButtonClick");
 //		dispatchTakeVideoIntent();
 	}
 }
