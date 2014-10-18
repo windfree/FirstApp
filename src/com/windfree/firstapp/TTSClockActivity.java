@@ -140,7 +140,7 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 			}
 			@Override
 			public void onReadyForSpeech (Bundle params) {
-				
+				Log.i(Consts.LOG_TAG, "++++++++++++++onReadyForSpeech");
 			}
 			@Override
 			public void onPartialResults (Bundle partialResults) {
@@ -148,15 +148,15 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 			}
 			@Override
 			public void onBufferReceived (byte[] buffer) {
-				
+				Log.i(Consts.LOG_TAG, "++++++++++++++onBufferReceived");
 			}
 			@Override
 			public void onEndOfSpeech() {
-				
+				Log.i(Consts.LOG_TAG, "++++++++++++++onEndOfSpeech");
 			}
 			@Override
 			public void onResults (Bundle results) {
-				
+				Log.i(Consts.LOG_TAG, "++++++++++++++onResults");
 			}
 		});
 	}
