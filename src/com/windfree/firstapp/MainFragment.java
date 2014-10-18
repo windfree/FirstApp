@@ -167,7 +167,7 @@ public class MainFragment extends ListFragment {
 			holder.btn.setOnClickListener(new View.OnClickListener() {				
 				@Override
 				public void onClick(View v) {
-					m_button_click_callback.onFunctionBtnClick((int)m_function_list_data.get(position).get("action"));
+					m_button_click_callback.onFunctionBtnClick((Integer)m_function_list_data.get(position).get("action"));
 				}
 			});
 			
