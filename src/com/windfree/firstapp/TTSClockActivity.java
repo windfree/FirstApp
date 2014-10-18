@@ -124,7 +124,7 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 		this.m_speech_recognizer.setRecognitionListener(new RecognitionListener() {
 			@Override
 			public void onBeginningOfSpeech () {
-				
+				Log.i(Consts.LOG_TAG, "+++++++++++++++onBeginningOfSpeech");
 			}
 			@Override
 			public void onError (int error) {
