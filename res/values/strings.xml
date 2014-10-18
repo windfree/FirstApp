@@ -23,5 +23,6 @@
     <string name="timer_clock_btn_label_stop">Stop</string>
     <string name="pause_clock_btn_label_pause">Pause</string>
     <string name="pause_clock_btn_label_restart">Restart</string>
+    <string name="voice_to_text_btn_label">VoiceToText</string>
 
 </resources>

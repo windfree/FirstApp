@@ -61,4 +61,20 @@
         android:layout_below="@+id/input_total_time_txt"
         android:text="@string/pause_clock_btn_label_pause" />
 
+    <ListView
+        android:id="@+id/voice_to_text_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/timer_clock_btn"
+        android:layout_below="@+id/timer_clock_btn" >
+    </ListView>
+
+    <Button
+        android:id="@+id/voice_to_text_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/voice_to_text_list"
+        android:layout_toRightOf="@+id/pause_clock_btn"
+        android:text="@string/voice_to_text_btn_label" />
+
 </RelativeLayout>

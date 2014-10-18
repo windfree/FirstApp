@@ -6,12 +6,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
@@ -19,8 +22,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +38,9 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 
 	private Button m_text_to_vocice_btn;
 	private EditText m_input_tts_txt;
+	private SpeechRecognizer m_speech_recognizer;
+	private Button m_voice_to_text_btn;
+	private ListView m_voice_to_text_list;
 
 	private Button m_timer_clock_btn;
 	private Button m_pause_clock_btn;
@@ -42,19 +50,19 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 	private boolean m_is_clock_start = false;
 	private boolean m_is_clock_pause = false;
 	private int m_total_time = 0;
-	
-	private Handler m_timer_handler = new Handler(){
+
+	private Handler m_timer_handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-        	switch (msg.what) {
-        	case COUNT_DOWN_EVENT:
-            	refresh_remain_time();
-            	break;
-        	}
-        	super.handleMessage(msg);
-        }
-    };
-    
+			switch (msg.what) {
+			case COUNT_DOWN_EVENT:
+				refresh_remain_time();
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+
 	@Override
 	public void onInit(int status) {
 		Log.i(Consts.LOG_TAG, "init tts engine");
@@ -79,6 +87,11 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 		this.m_text_to_vocice_btn = (Button) findViewById(R.id.text_to_voice_btn);
 		this.m_text_to_vocice_btn.setOnClickListener(this);
 		this.m_input_tts_txt = (EditText) findViewById(R.id.input_tts_text);
+		this.m_voice_to_text_btn = (Button) findViewById(R.id.voice_to_text_btn);
+		this.m_voice_to_text_btn.setOnClickListener(this);
+		this.m_voice_to_text_list = (ListView) findViewById(R.id.voice_to_text_list);
+		this.init_recognizer();
+		
 		this.m_timer_clock_btn = (Button) findViewById(R.id.timer_clock_btn);
 		this.m_timer_clock_btn.setOnClickListener(this);
 		this.m_pause_clock_btn = (Button) findViewById(R.id.pause_clock_btn);
@@ -101,6 +114,53 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 		startActivityForResult(checkIntent, TEXT_TO_VOICE_INTENT);
 	}
 
+	private void init_recognizer() {
+		this.m_speech_recognizer = SpeechRecognizer.createSpeechRecognizer(this);
+		if(SpeechRecognizer.isRecognitionAvailable(this) == false) {
+			Toast.makeText(TTSClockActivity.this, "识别服务不可用",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+		this.m_speech_recognizer.setRecognitionListener(new RecognitionListener() {
+			@Override
+			public void onBeginningOfSpeech () {
+				
+			}
+			@Override
+			public void onError (int error) {
+				
+			}
+			@Override
+			public void onRmsChanged (float rmsdB) {
+				
+			}
+			@Override
+			public void onEvent (int eventType, Bundle params) {
+				
+			}
+			@Override
+			public void onReadyForSpeech (Bundle params) {
+				
+			}
+			@Override
+			public void onPartialResults (Bundle partialResults) {
+				
+			}
+			@Override
+			public void onBufferReceived (byte[] buffer) {
+				
+			}
+			@Override
+			public void onEndOfSpeech() {
+				
+			}
+			@Override
+			public void onResults (Bundle results) {
+				
+			}
+		});
+	}
+	
 	private void onTextToVoiceBtnClick(View v) {
 		String text = this.m_input_tts_txt.getText().toString();
 		if (text != null && text.length() > 0) {
@@ -108,18 +168,22 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 					Toast.LENGTH_LONG).show();
 			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
 		}
-		// startVoiceRecognitionActivity();
 	}
-	
+
+	private void onVoiceToTextBtnClick(View v) {
+//		startVoiceRecognitionActivity();		
+	}
+
 	private void onTimerClockBtnClick(View v) {
 		if (this.m_is_clock_start == true) {
-			if(this.m_clock_timer != null) {
+			if (this.m_clock_timer != null) {
 				this.m_clock_timer.cancel();
 				this.m_clock_timer = null;
 			}
 			this.m_timer_clock_btn
 					.setText(R.string.timer_clock_btn_label_start);
-			this.m_pause_clock_btn.setText(R.string.pause_clock_btn_label_pause);
+			this.m_pause_clock_btn
+					.setText(R.string.pause_clock_btn_label_pause);
 			this.m_remain_time_txt.setText("");
 			this.m_is_clock_pause = false;
 		} else {
@@ -150,13 +214,14 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 		}
 		this.m_is_clock_start = !this.m_is_clock_start;
 	}
-	
+
 	private void onPauseClockBtnClick(View v) {
-		if(this.m_is_clock_start) {
-			if(this.m_is_clock_pause) {
+		if (this.m_is_clock_start) {
+			if (this.m_is_clock_pause) {
 				// 重新启动
 				this.m_clock_timer = new Timer("ClockTimer", false);
-				this.m_pause_clock_btn.setText(R.string.pause_clock_btn_label_pause);
+				this.m_pause_clock_btn
+						.setText(R.string.pause_clock_btn_label_pause);
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
@@ -166,16 +231,17 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 					}
 				};
 				this.m_clock_timer.schedule(task, 1000, 1000);
-			}else{
+			} else {
 				// 暂停
-				this.m_pause_clock_btn.setText(R.string.pause_clock_btn_label_restart);
+				this.m_pause_clock_btn
+						.setText(R.string.pause_clock_btn_label_restart);
 				this.m_clock_timer.cancel();
 				this.m_clock_timer = null;
 			}
 			this.m_is_clock_pause = !this.m_is_clock_pause;
 		}
 	}
-	
+
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.text_to_voice_btn:
@@ -187,31 +253,89 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 		case R.id.pause_clock_btn:
 			onPauseClockBtnClick(v);
 			break;
+		case R.id.voice_to_text_btn:
+			onVoiceToTextBtnClick(v);
+			break;
 		}
 	}
 
 	private void refresh_remain_time() {
 		m_remain_time_txt.setText(String.format("%d", m_total_time));
 		m_total_time -= 1;
-		if(m_total_time < 0) {
+		if (m_total_time < 0) {
 			m_clock_timer.cancel();
 			m_clock_timer = null;
 			m_timer_clock_btn.setText(R.string.timer_clock_btn_label_start);
 			m_is_clock_start = false;
-//			tts.speak("计时完成", TextToSpeech.QUEUE_ADD, null);
-		}    	
-    }
-	
+			// tts.speak("计时完成", TextToSpeech.QUEUE_ADD, null);
+		}
+	}
+
+	// void test() {
+	// try {
+	// InputStream audio = new MicrophoneInputStream(11025, 11025 * 5); //设置输入参数
+	// String cdir = SpeechRecognizer.getConsfigDir(null); // 获取语音识别配置目录
+	// Recognizer recognizer = new Recognizer(cdir + "/baseline11k.par");
+	// Recognizer.Grammar grammar = recognizer.new Grammar(cdir
+	// + "/grammars/VoiceDialer.g2g");
+	// grammar.setupRecognizer();
+	// grammar.resetAllSlots();
+	// grammar.compile();
+	// recognizer.start(); // 开始识别
+	// while (true) { // 循环等待识别结果
+	// switch (recognizer.advance()) {
+	// case Recognizer.EVENT_INCOMPLETE:
+	// case Recognizer.EVENT_STARTED:
+	// case Recognizer.EVENT_START_OF_VOICING:
+	// case Recognizer.EVENT_END_OF_VOICING:
+	// continue; // 未完成，继续等待识别结果
+	// case Recognizer.EVENT_RECOGNITION_RESULT:
+	// for (int i = 0; i < recognizer.getResultCount(); i++) {
+	// String result = recognizer.getResult(i,
+	// Recognizer.KEY_LITERAL);
+	// Log.d(TAG, "result " + result);
+	// mText.setText(result);
+	// } // 识别到字串，显示并退出循环
+	// break;
+	// case Recognizer.EVENT_NEED_MORE_AUDIO:
+	// recognizer.putAudio(audio) // 需要更多音频数据;
+	// continue;
+	// default:
+	// break;
+	// }
+	// break;
+	// }
+	// recognizer.stop();
+	// recognizer.destroy();
+	// audio.close(); // 回收资源
+	// } catch (IOException e) {
+	// Log.d(Consts.LOG_TAG, "error", e);
+	// }
+	// }
+
 	/**
 	 * Fire an intent to start the speech recognition activity.
 	 */
 	private void startVoiceRecognitionActivity() {
-		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-		intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-				"Speech recognition demo");
-		startActivityForResult(intent, VOICE_TO_TEXT_INTENT);
+		try {
+			Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+					RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+			intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+					"Speech recognition demo");
+			startActivityForResult(intent, VOICE_TO_TEXT_INTENT);
+		} catch (ActivityNotFoundException e) {
+//			Intent browserIntent = new Intent(
+//					Intent.ACTION_VIEW,
+//					Uri.parse("https://market.android.com/details?id=com.google.android.voicesearch"));
+//			startActivity(browserIntent);
+			Toast t = Toast.makeText(getApplicationContext(),
+                    "Ops! Your device doesn't support Speech to Text",
+                    Toast.LENGTH_SHORT);
+            t.show();
+
+		}
 	}
 
 	/**
@@ -224,8 +348,8 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 			// could have heard
 			ArrayList matches = data
 					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-			// mList.setAdapter(new ArrayAdapter(this,
-			// android.R.layout.simple_list_item_1, matches));
+			this.m_voice_to_text_list.setAdapter(new ArrayAdapter(this,
+					R.layout.voice_to_text_item, matches));
 		}
 		if (requestCode == TEXT_TO_VOICE_INTENT) {
 			if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
@@ -245,14 +369,14 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 
 	@Override
 	protected void onDestroy() {
-	    //Close the Text to Speech Library
-	    if(this.tts != null) {
-	    	this.tts.stop();
-	    	this.tts.shutdown();
-	    }
-	    super.onDestroy();
+		// Close the Text to Speech Library
+		if (this.tts != null) {
+			this.tts.stop();
+			this.tts.shutdown();
+		}
+		super.onDestroy();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
