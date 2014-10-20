@@ -75,6 +75,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/voice_to_text_list"
         android:layout_toRightOf="@+id/pause_clock_btn"
-        android:text="@string/voice_to_text_btn_label" />
+        android:text="@string/voice_to_text_btn_label_start" />
 
 </RelativeLayout>
