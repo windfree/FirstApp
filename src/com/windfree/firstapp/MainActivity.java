@@ -84,12 +84,17 @@ public class MainActivity extends ActionBarActivity implements MainFragment.onBu
 	}
 
 	public void onFunctionBtnClick(int action) {
+		Intent intent = null;
 		switch(action) {
 		case Consts.TTS_ACTION:
-			Intent intent = new Intent(this, TTSClockActivity.class);
+			intent = new Intent(this, TTSClockActivity.class);
 //			EditText editText = (EditText) findViewById(R.id.edit_message);
 //			String message = editText.getText().toString();
 //			intent.putExtra(EXTRA_MESSAGE, message);
+			startActivity(intent);
+			break;
+		case Consts.MIN_OPENGL_ACTION:
+			intent = new Intent(this, MinOpenGLActivity.class);
 			startActivity(intent);
 			break;
 		}

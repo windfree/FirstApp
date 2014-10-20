@@ -16,6 +16,9 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -43,6 +46,14 @@
         <activity
             android:name=".TTSClockActivity"
             android:label="@string/title_activity_ttsclock"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.windfree.firstapp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MinOpenGLActivity"
+            android:label="@string/title_activity_min_open_gl"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

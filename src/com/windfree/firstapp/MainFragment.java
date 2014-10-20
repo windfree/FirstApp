@@ -182,6 +182,11 @@ public class MainFragment extends ListFragment {
 		map.put("action", Consts.TTS_ACTION);
 		list.add(map);
 		
+		map = new HashMap<String, Object>();
+		map.put("title", Consts.MIN_OPENGL_FUNCTION);
+		map.put("action", Consts.MIN_OPENGL_ACTION);
+		list.add(map);
+		
 		return list;
 	}
 
