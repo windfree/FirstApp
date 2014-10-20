@@ -7,12 +7,15 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.speech.RecognitionListener;
+import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
@@ -41,6 +44,7 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 	private SpeechRecognizer m_speech_recognizer;
 	private Button m_voice_to_text_btn;
 	private ListView m_voice_to_text_list;
+	private boolean m_is_voice_listening = false;
 
 	private Button m_timer_clock_btn;
 	private Button m_pause_clock_btn;
@@ -115,50 +119,14 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 	}
 
 	private void init_recognizer() {
-		this.m_speech_recognizer = SpeechRecognizer.createSpeechRecognizer(this);
+		this.m_speech_recognizer = SpeechRecognizer.createSpeechRecognizer(this);//, new ComponentName(getPackageName(),  
+//                BDRecognitionService.class.getName()));
 		if(SpeechRecognizer.isRecognitionAvailable(this) == false) {
-			Toast.makeText(TTSClockActivity.this, "Ê¶±ğ·şÎñ²»¿ÉÓÃ",
+			Toast.makeText(TTSClockActivity.this, "è¯†åˆ«æœåŠ¡ä¸å¯ç”¨",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
-		this.m_speech_recognizer.setRecognitionListener(new RecognitionListener() {
-			@Override
-			public void onBeginningOfSpeech () {
-				Log.i(Consts.LOG_TAG, "+++++++++++++++onBeginningOfSpeech");
-			}
-			@Override
-			public void onError (int error) {
-				
-			}
-			@Override
-			public void onRmsChanged (float rmsdB) {
-				
-			}
-			@Override
-			public void onEvent (int eventType, Bundle params) {
-				
-			}
-			@Override
-			public void onReadyForSpeech (Bundle params) {
-				Log.i(Consts.LOG_TAG, "++++++++++++++onReadyForSpeech");
-			}
-			@Override
-			public void onPartialResults (Bundle partialResults) {
-				
-			}
-			@Override
-			public void onBufferReceived (byte[] buffer) {
-				Log.i(Consts.LOG_TAG, "++++++++++++++onBufferReceived");
-			}
-			@Override
-			public void onEndOfSpeech() {
-				Log.i(Consts.LOG_TAG, "++++++++++++++onEndOfSpeech");
-			}
-			@Override
-			public void onResults (Bundle results) {
-				Log.i(Consts.LOG_TAG, "++++++++++++++onResults");
-			}
-		});
+		this.m_speech_recognizer.setRecognitionListener(new IRecognitionListener());
 	}
 	
 	private void onTextToVoiceBtnClick(View v) {
@@ -170,7 +138,147 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 		}
 	}
 
+	class BDRecognitionService extends RecognitionService {	     
+	    @Override  
+	    public void onCreate() {
+	        super.onCreate();  
+	        // åœ¨è°ƒç”¨æœåŠ¡æ—¶è¿›è¡Œä¸€æ¬¡  
+	    }  
+	  
+	    @Override  
+	    protected void onStartListening(Intent recognizerIntent, Callback mCallback) {  
+	      //è¿™ä¸ªæ–¹æ³•å…·ä½“å®ç°äº†ç¬¬ä¸‰æ–¹sdkçš„æ¥å…¥
+	    	//recognizerIntent æºå¸¦äº†ä¸Šå±‚ä¼ å…¥çš„å‚æ•°  
+	    	//mCallback éœ€è¦å°†ç¬¬ä¸‰æ–¹sdkçš„ç»“æœå›è°ƒç»™è¯¥æ¥å£ï¼Œæ˜¯ä¸Šå±‚ä¸ç¬¬ä¸‰æ–¹sdkçš„æ¡¥æ¢  
+	    } 
+	    @Override   
+		protected void onCancel(Callback listener)  
+		 { //æ³¨é”€ 
+		    	
+		 }
+		@Override   
+		public void onDestroy()   
+		{ //é”€æ¯ super.onDestroy(); 
+		}
+		
+		@Override  
+		 protected void onStopListening(Callback listener)   
+		{ //æš‚åœ
+			
+		}
+	}
+	
+	class IRecognitionListener implements RecognitionListener {
+		@Override
+		public void onBeginningOfSpeech () {
+			Log.i(Consts.LOG_TAG, "+++++++++++++++onBeginningOfSpeech");
+			String text = "å¼€å§‹è¯´è¯";
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		@Override
+		public void onError (int error) {
+			String text = String.format("å‡ºé”™äº†%d", error);
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		@Override
+		public void onRmsChanged (float rmsdB) {
+			String text = "å£°éŸ³å˜åŒ–";
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		@Override
+		public void onEvent (int eventType, Bundle params) {
+			String text = "äº‹ä»¶åˆ°è¾¾";
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		@Override
+		public void onReadyForSpeech (Bundle params) {
+			String text = "å‡†å¤‡å¥½äº†";
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		@Override
+		public void onPartialResults (Bundle partialResults) {
+			String text = "å¾—åˆ°äº†éƒ¨åˆ†ç»“æœ";
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		@Override
+		public void onBufferReceived (byte[] buffer) {
+			String text = "æ”¶åˆ°ç¼“å­˜";
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		@Override
+		public void onEndOfSpeech() {
+			String text = "è¯´è¯ç»“æŸ";
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		@Override
+		public void onResults (Bundle results) {
+			String text = "å¾—åˆ°è¯†åˆ«ç»“æœ";
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+	}
+	
+	class Callback {  
+        private final IRecognitionListener mListener;
+  
+        private Callback(IRecognitionListener listener) {
+            mListener = listener;  
+        }
+        
+        public void beginningOfSpeech() throws RemoteException {
+            mListener.onBeginningOfSpeech();
+        }  
+  
+        public void bufferReceived(byte[] buffer) throws RemoteException {
+            mListener.onBufferReceived(buffer);  
+        }  
+          
+        public void error(int error) throws RemoteException {
+//            Message.obtain(mHandler, MSG_RESET).sendToTarget();
+            mListener.onError(error);
+        }  
+  
+         
+        public void partialResults(Bundle partialResults) throws RemoteException {  
+            mListener.onPartialResults(partialResults);  
+        }  
+  
+         
+        public void readyForSpeech(Bundle params) throws RemoteException {  
+            mListener.onReadyForSpeech(params);  
+        }  
+        
+        public void results(Bundle results) throws RemoteException {  
+//            Message.obtain(mHandler, MSG_RESET).sendToTarget();  
+            mListener.onResults(results);  
+        }  
+          
+        public void rmsChanged(float rmsdB) throws RemoteException {  
+            mListener.onRmsChanged(rmsdB);  
+        }  
+    }
+	
 	private void onVoiceToTextBtnClick(View v) {
+		if(this.m_is_voice_listening){
+			this.m_speech_recognizer.stopListening();
+			this.m_voice_to_text_btn.setText(R.string.voice_to_text_btn_label_start);
+		}else{
+			Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+					RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+			intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+					"Speech recognition demo");
+			intent.putExtra(
+			        RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 
+			        3000);
+            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+			this.m_speech_recognizer.startListening(intent);
+//			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "voice.recognition.test");
+
+			this.m_voice_to_text_btn.setText(R.string.voice_to_text_btn_label_stop);
+		}
+		this.m_is_voice_listening = !this.m_is_voice_listening;
 //		startVoiceRecognitionActivity();		
 	}
 
@@ -193,7 +301,7 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 			try {
 				this.m_total_time = Integer.parseInt(total_time_str);
 				if (this.m_total_time <= 0) {
-					Toast.makeText(TTSClockActivity.this, "ÇëÊäÈëÕıÕûÊı",
+					Toast.makeText(TTSClockActivity.this, "è¯·è¾“å…¥æ­£æ•´æ•°",
 							Toast.LENGTH_LONG).show();
 				}
 				TimerTask task = new TimerTask() {
@@ -208,7 +316,7 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 				this.m_timer_clock_btn
 						.setText(R.string.timer_clock_btn_label_stop);
 			} catch (NumberFormatException e) {
-				Toast.makeText(TTSClockActivity.this, "ÇëÊäÈëÕıÕûÊı",
+				Toast.makeText(TTSClockActivity.this, "è¯·è¾“å…¥æ­£æ•´æ•°",
 						Toast.LENGTH_LONG).show();
 			}
 		}
@@ -218,7 +326,7 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 	private void onPauseClockBtnClick(View v) {
 		if (this.m_is_clock_start) {
 			if (this.m_is_clock_pause) {
-				// ÖØĞÂÆô¶¯
+				// é‡å¯
 				this.m_clock_timer = new Timer("ClockTimer", false);
 				this.m_pause_clock_btn
 						.setText(R.string.pause_clock_btn_label_pause);
@@ -232,7 +340,7 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 				};
 				this.m_clock_timer.schedule(task, 1000, 1000);
 			} else {
-				// ÔİÍ£
+				// æš‚åœ
 				this.m_pause_clock_btn
 						.setText(R.string.pause_clock_btn_label_restart);
 				this.m_clock_timer.cancel();
@@ -267,38 +375,38 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 			m_clock_timer = null;
 			m_timer_clock_btn.setText(R.string.timer_clock_btn_label_start);
 			m_is_clock_start = false;
-			// tts.speak("¼ÆÊ±Íê³É", TextToSpeech.QUEUE_ADD, null);
+			tts.speak("è®¡æ—¶å®Œæˆ", TextToSpeech.QUEUE_ADD, null);
 		}
 	}
 
 	// void test() {
 	// try {
-	// InputStream audio = new MicrophoneInputStream(11025, 11025 * 5); //ÉèÖÃÊäÈë²ÎÊı
-	// String cdir = SpeechRecognizer.getConsfigDir(null); // »ñÈ¡ÓïÒôÊ¶±ğÅäÖÃÄ¿Â¼
+	// InputStream audio = new MicrophoneInputStream(11025, 11025 * 5); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// String cdir = SpeechRecognizer.getConsfigDir(null); // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼
 	// Recognizer recognizer = new Recognizer(cdir + "/baseline11k.par");
 	// Recognizer.Grammar grammar = recognizer.new Grammar(cdir
 	// + "/grammars/VoiceDialer.g2g");
 	// grammar.setupRecognizer();
 	// grammar.resetAllSlots();
 	// grammar.compile();
-	// recognizer.start(); // ¿ªÊ¼Ê¶±ğ
-	// while (true) { // Ñ­»·µÈ´ıÊ¶±ğ½á¹û
+	// recognizer.start(); // ï¿½ï¿½Ê¼Ê¶ï¿½ï¿½
+	// while (true) { // Ñ­ï¿½ï¿½ï¿½È´ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½
 	// switch (recognizer.advance()) {
 	// case Recognizer.EVENT_INCOMPLETE:
 	// case Recognizer.EVENT_STARTED:
 	// case Recognizer.EVENT_START_OF_VOICING:
 	// case Recognizer.EVENT_END_OF_VOICING:
-	// continue; // Î´Íê³É£¬¼ÌĞøµÈ´ıÊ¶±ğ½á¹û
+	// continue; // Î´ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½
 	// case Recognizer.EVENT_RECOGNITION_RESULT:
 	// for (int i = 0; i < recognizer.getResultCount(); i++) {
 	// String result = recognizer.getResult(i,
 	// Recognizer.KEY_LITERAL);
 	// Log.d(TAG, "result " + result);
 	// mText.setText(result);
-	// } // Ê¶±ğµ½×Ö´®£¬ÏÔÊ¾²¢ÍË³öÑ­»·
+	// } // Ê¶ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ë³ï¿½Ñ­ï¿½ï¿½
 	// break;
 	// case Recognizer.EVENT_NEED_MORE_AUDIO:
-	// recognizer.putAudio(audio) // ĞèÒª¸ü¶àÒôÆµÊı¾İ;
+	// recognizer.putAudio(audio) // ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½;
 	// continue;
 	// default:
 	// break;
@@ -307,7 +415,7 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 	// }
 	// recognizer.stop();
 	// recognizer.destroy();
-	// audio.close(); // »ØÊÕ×ÊÔ´
+	// audio.close(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´
 	// } catch (IOException e) {
 	// Log.d(Consts.LOG_TAG, "error", e);
 	// }
@@ -373,6 +481,13 @@ public class TTSClockActivity extends Activity implements OnInitListener,
 		if (this.tts != null) {
 			this.tts.stop();
 			this.tts.shutdown();
+			this.tts = null;
+		}
+		if(this.m_speech_recognizer != null) {
+			this.m_speech_recognizer.cancel();
+			this.m_speech_recognizer.stopListening();
+			this.m_speech_recognizer.destroy();
+			this.m_speech_recognizer = null;
 		}
 		super.onDestroy();
 	}

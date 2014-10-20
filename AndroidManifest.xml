@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+			
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -24,7 +25,15 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+        <service android:name="BDRecognitionService"
+			android:label="BDRecognitionService" >	
+			<intent-filter>
+				<action android:name="android.speech.RecognitionService" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</service>
+	
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
