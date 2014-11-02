@@ -25,5 +25,6 @@
     <string name="voice_to_text_btn_label_start">VoiceToText</string>
     <string name="voice_to_text_btn_label_stop">Stop</string>
     <string name="title_activity_min_open_gl">MinOpenGL</string>
+    <string name="title_activity_tencent_demo">TencentDemo</string>
 
 </resources>

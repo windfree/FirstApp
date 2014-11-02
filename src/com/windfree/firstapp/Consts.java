@@ -9,4 +9,7 @@ public class Consts {
 	// action code
 	public final static int TTS_ACTION = 0;
 	public final static int MIN_OPENGL_ACTION = 1;
+	
+	// tencent 
+	public final static String TENCENT_ID = "tencent222222";
 }

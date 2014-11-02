@@ -12,8 +12,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-			
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -25,15 +26,34 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <service android:name="BDRecognitionService"
-			android:label="BDRecognitionService" >	
-			<intent-filter>
-				<action android:name="android.speech.RecognitionService" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</service>
-	
+        android:theme="@style/AppTheme" >
+        <service
+            android:name=".BDRecognitionService"
+            android:label="BDRecognitionService" >
+            <intent-filter>
+                <action android:name="android.speech.RecognitionService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent222222" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -67,6 +87,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.windfree.firstapp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".TencentDemo"
+            android:label="@string/title_activity_tencent_demo" >
         </activity>
     </application>
 
